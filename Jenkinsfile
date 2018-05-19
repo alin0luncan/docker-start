@@ -1,5 +1,9 @@
 node {
 
+def appName = "gceme"
+def feSvcName = "${appName}-frontend"
+
+
 withCredentials([usernamePassword(credentialsId: '339582cc-d9f0-4b33-b057-d53e3bd1b203', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
   imageTag = "${USER}/${appName}:${env.BRANCH_NAME}-${env.BUILD_NUMBER}"
   stage('Build image') {
@@ -16,8 +20,7 @@ withCredentials([usernamePassword(credentialsId: '339582cc-d9f0-4b33-b057-d53e3b
   }
  }
 
-    def appName = 'gceme'
-    def feSvcName = "${appName}-frontend"
+    
     def username = "alin.luncan@accesa.eu"
     def password = "123456" 
     def imageTag = "${USER}/${appName}:${env.BRANCH_NAME}-${env.BUILD_NUMBER}"
