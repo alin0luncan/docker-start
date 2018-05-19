@@ -1,35 +1,34 @@
 node {
 
-def appName = "gceme"
-def feSvcName = "${appName}-frontend"
-
-def username = "alin.luncan@accesa.eu"
+    def appName = "gceme"
+    def feSvcName = "${appName}-frontend"
+    def username = "alin.luncan@accesa.eu"
     def password = "123456" 
-    def imageTag = "${USER}/${appName}:${env.BRANCH_NAME}-${env.BUILD_NUMBER}"
-
-
-
-    checkout scm
+    def imageTag = "";
+    checkout 
+    scm
 
     stage('Preparation') {
         sh("curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.9.7/bin/linux/amd64/kubectl")
         sh("chmod +x ./kubectl && mv kubectl /usr/local/sbin")
     }
-withCredentials([usernamePassword(credentialsId: '339582cc-d9f0-4b33-b057-d53e3bd1b203', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
-  imageTag = "${USER}/${appName}:${env.BRANCH_NAME}-${env.BUILD_NUMBER}"
-  stage('Build image') {
-   sh("docker build -t ${imageTag} .")
-  }
+    
+    withCredentials([usernamePassword(credentialsId: '339582cc-d9f0-4b33-b057-d53e3bd1b203', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
+        imageTag = "${USER}/${appName}:${env.BRANCH_NAME}-${env.BUILD_NUMBER}"
+        
+        stage('Build image') {
+        sh("docker build -t ${imageTag} .")
+        }
 
-  stage('Run Go tests') {
-   sh("docker run ${imageTag} go test")
-  }
-  stage('Push image to registry') {
+          stage('Run Go tests') {
+           sh("docker run ${imageTag} go test")
+          }
+         stage('Push image to registry') {
    
-   sh("docker login -u ${USER} -p ${PASS}")
-   sh("docker push ${imageTag}")
-  }
- }
+           sh("docker login -u ${USER} -p ${PASS}")
+           sh("docker push ${imageTag}")
+          }
+         }
 
     stage("Deploy Application") {
         switch (env.BRANCH_NAME) {
