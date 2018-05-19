@@ -27,7 +27,7 @@ def getPassword = { username ->
 
     def appName = 'gceme'
     def feSvcName = "${appName}-frontend"
-    def username = "alinl.luncan@gmail.com"
+    def username = "alinl.luncan@accesa.eu"
     def password = getPassword(username)
     def imageTag = "${username}/${appName}:${env.BRANCH_NAME}-${env.BUILD_NUMBER}"
 
