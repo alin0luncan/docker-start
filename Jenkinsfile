@@ -16,13 +16,13 @@ node {
         sh("docker build -t ${imageTag} .")
         }
 
+          stage('Run Go tests') {
+           sh("docker run ${imageTag} go test")
+          }
     
     withCredentials([usernamePassword(credentialsId: '339582cc-d9f0-4b33-b057-d53e3bd1b203', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
         imageTag = "${USER}/${appName}:${env.BRANCH_NAME}-${env.BUILD_NUMBER}"
         
-          stage('Run Go tests') {
-           sh("docker run ${imageTag} go test")
-          }
          stage('Push image to registry') {
    
            sh("docker login -u ${USER} -p ${PASS}")
