@@ -1,6 +1,6 @@
 node {
 
-withCredentials([usernamePassword(credentialsId: '59f967c0-42f3-42ca-b1bc-026494c9ed69', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
+withCredentials([usernamePassword(credentialsId: '339582cc-d9f0-4b33-b057-d53e3bd1b203', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
   imageTag = "${USER}/${appName}:${env.BRANCH_NAME}-${env.BUILD_NUMBER}"
   stage('Build image') {
    sh("docker build -t ${imageTag} .")
