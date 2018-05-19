@@ -2,9 +2,9 @@ node {
 
     def appName = "gceme"
     def feSvcName = "${appName}-frontend"
-    def username = "alin.luncan@accesa.eu"
-    def password = "123456" 
-    def imageTag = "";
+    def username = "testuserwsk8s"
+    def password = "cacamaca32"
+    def imageTag = "${username}/${appName}:${env.BRANCH_NAME}-${env.BUILD_NUMBER}"
     checkout scm
 
     stage('Preparation') {
