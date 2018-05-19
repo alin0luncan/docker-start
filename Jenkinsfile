@@ -1,29 +1,20 @@
 node {
 
-def getPassword = { username ->
-    def creds = com.cloudbees.plugins.credentials.CredentialsProvider.lookupCredentials(
-        com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials.class,
-        jenkins.model.Jenkins.instance
-    )
+withCredentials([usernamePassword(credentialsId: '59f967c0-42f3-42ca-b1bc-026494c9ed69', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
+  imageTag = "${USER}/${appName}:${env.BRANCH_NAME}-${env.BUILD_NUMBER}"
+  stage('Build image') {
+   sh("docker build -t ${imageTag} .")
+  }
 
-    def c = creds.findResult { it.username == username ? it : null }
-
-    if ( c ) {
-        println "found credential ${c.id} for username ${c.username}"
-
-        def systemCredentialsProvider = jenkins.model.Jenkins.instance.getExtensionList(
-            'com.cloudbees.plugins.credentials.SystemCredentialsProvider'
-            ).first()
-
-      def password = systemCredentialsProvider.credentials.first().password
-
-      println password
-
-
-    } else {
-      println "could not find credential for ${username}"
-    }
-}
+  stage('Run Go tests') {
+   sh("docker run ${imageTag} go test")
+  }
+  stage('Push image to registry') {
+   
+   sh("docker login -u ${USER} -p ${PASS}")
+   sh("docker push ${imageTag}")
+  }
+ }
 
     def appName = 'gceme'
     def feSvcName = "${appName}-frontend"
@@ -47,7 +38,7 @@ def getPassword = { username ->
     }
 
     stage('Push image to registry') {
-        sh("docker login -u ${username} -p ${password}")
+        sh("docker login -u ${USER} -p ${PASS}")
         sh("docker push ${imageTag}")
     }
 
