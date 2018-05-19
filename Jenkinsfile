@@ -5,8 +5,7 @@ node {
     def username = "alin.luncan@accesa.eu"
     def password = "123456" 
     def imageTag = "";
-    checkout 
-    scm
+    checkout scm
 
     stage('Preparation') {
         sh("curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.9.7/bin/linux/amd64/kubectl")
