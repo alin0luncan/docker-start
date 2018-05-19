@@ -12,13 +12,14 @@ node {
         sh("chmod +x ./kubectl && mv kubectl /usr/local/sbin")
     }
     
-    withCredentials([usernamePassword(credentialsId: '339582cc-d9f0-4b33-b057-d53e3bd1b203', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
-        imageTag = "${USER}/${appName}:${env.BRANCH_NAME}-${env.BUILD_NUMBER}"
-        
         stage('Build image') {
         sh("docker build -t ${imageTag} .")
         }
 
+    
+    withCredentials([usernamePassword(credentialsId: '339582cc-d9f0-4b33-b057-d53e3bd1b203', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
+        imageTag = "${USER}/${appName}:${env.BRANCH_NAME}-${env.BUILD_NUMBER}"
+        
           stage('Run Go tests') {
            sh("docker run ${imageTag} go test")
           }
