@@ -18,9 +18,9 @@ withCredentials([usernamePassword(credentialsId: '59f967c0-42f3-42ca-b1bc-026494
 
     def appName = 'gceme'
     def feSvcName = "${appName}-frontend"
-    def username = "alinl.luncan@accesa.eu"
-    def password = getPassword(username)
-    def imageTag = "${username}/${appName}:${env.BRANCH_NAME}-${env.BUILD_NUMBER}"
+    def username = "alin.luncan@accesa.eu"
+    def password = "123456" 
+    def imageTag = "${USER}/${appName}:${env.BRANCH_NAME}-${env.BUILD_NUMBER}"
 
     checkout scm
 
